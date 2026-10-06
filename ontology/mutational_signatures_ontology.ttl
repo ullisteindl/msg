@@ -1,0 +1,1248 @@
+@prefix : <https://iccb-cologne.org/groups/lehmann-lab/msg#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://iccb-cologne.org/groups/lehmann-lab/msg#> .
+
+<https://iccb-cologne.org/groups/lehmann-lab/msg> rdf:type owl:Ontology ;
+                                                   rdfs:comment "This is an ontology describing what mutational signatures are, which properties they have, and how they interact with genomic information, treatments, and cancer types"@en ;
+                                                   rdfs:label "msg"@en ,
+                                                              "mutational signature ontology"@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.w3.org/ns/prov#category
+<http://www.w3.org/ns/prov#category> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/ns/prov#component
+<http://www.w3.org/ns/prov#component> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/ns/prov#inverse
+<http://www.w3.org/ns/prov#inverse> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/ns/prov#qualifiedForm
+<http://www.w3.org/ns/prov#qualifiedForm> rdf:type owl:AnnotationProperty .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_has_evidence_strength
+:COSMIC_has_evidence_strength rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.w3.org/ns/prov#hadPrimarySource
+<http://www.w3.org/ns/prov#hadPrimarySource> rdf:type owl:ObjectProperty ;
+                                             rdfs:subPropertyOf <http://www.w3.org/ns/prov#wasDerivedFrom> ;
+                                             rdfs:domain <http://www.w3.org/ns/prov#Entity> ,
+                                                         :Observation ;
+                                             rdfs:range <http://www.w3.org/ns/prov#Entity> ,
+                                                        :Evidence ;
+                                             rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+                                             rdfs:label "hadPrimarySource" ;
+                                             <http://www.w3.org/ns/prov#category> "expanded" ;
+                                             <http://www.w3.org/ns/prov#component> "derivations" ;
+                                             <http://www.w3.org/ns/prov#inverse> "wasPrimarySourceOf" ;
+                                             <http://www.w3.org/ns/prov#qualifiedForm> <http://www.w3.org/ns/prov#PrimarySource> ,
+                                                                                       <http://www.w3.org/ns/prov#qualifiedPrimarySource> .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://www.w3.org/ns/prov#hadPrimarySource> ;
+   owl:annotatedProperty rdfs:subPropertyOf ;
+   owl:annotatedTarget <http://www.w3.org/ns/prov#wasDerivedFrom> ;
+   rdfs:comment "hadPrimarySource property is a particular case of wasDerivedFrom (see http://www.w3.org/TR/prov-dm/#term-original-source) that aims to give credit to the source that originated some information."
+ ] .
+
+
+###  http://www.w3.org/ns/prov#wasDerivedFrom
+<http://www.w3.org/ns/prov#wasDerivedFrom> rdf:type owl:ObjectProperty .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_aetiology
+:COSMIC_aetiology rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf :COSMIC_obj_properties_with_evidence_strength ;
+                  rdfs:domain :MutationalSignature ;
+                  rdfs:range :Etiology .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_experimental_evidence
+:COSMIC_experimental_evidence rdf:type owl:ObjectProperty ;
+                              rdfs:subPropertyOf :COSMIC_obj_properties_with_evidence_strength ;
+                              rdfs:comment "points to the doi of a study"@en ;
+                              rdfs:label "COSMIC_experimental_evidence"@en ;
+                              :COSMIC_has_evidence_strength [ rdf:type :COSMIC_evidence_strength
+                                                            ] .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_experimental_validation_species
+:COSMIC_experimental_validation_species rdf:type owl:ObjectProperty ;
+                                        rdfs:subPropertyOf :COSMIC_obj_properties_with_evidence_strength ;
+                                        rdfs:comment "e.g. Yeast, Mice, etc."@en ;
+                                        rdfs:label "COSMIC_experimental_validation_species"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_experimentally_validated
+:COSMIC_experimentally_validated rdf:type owl:ObjectProperty ;
+                                 rdfs:subPropertyOf :COSMIC_obj_properties_with_evidence_strength .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_first_included_in
+:COSMIC_first_included_in rdf:type owl:ObjectProperty ;
+                          rdfs:subPropertyOf :COSMIC_properties ;
+                          rdfs:domain :Observation ;
+                          rdfs:range :COSMIC_version .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_has_version
+:COSMIC_has_version rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :COSMIC_properties ;
+                    rdfs:domain :Observation ;
+                    rdfs:range :COSMIC_version .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_identification_study
+:COSMIC_identification_study rdf:type owl:ObjectProperty ;
+                             rdfs:subPropertyOf :COSMIC_properties .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_obj_properties_with_evidence_strength
+:COSMIC_obj_properties_with_evidence_strength rdf:type owl:ObjectProperty ;
+                                              rdfs:subPropertyOf :COSMIC_properties ;
+                                              rdfs:comment "Abstract class for all properties that have evidence strength"@en ;
+                                              rdfs:label "COSMIC_obj_properties_with_evidence_strength"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_properties
+:COSMIC_properties rdf:type owl:ObjectProperty ;
+                   rdfs:domain :Observation ;
+                   rdfs:comment "For all properties contained in the summary section"@en ;
+                   rdfs:label "COSMIC_properties"@en ;
+                   :COSMIC_has_evidence_strength [ rdf:type :COSMIC_evidence_strength
+                                                 ] .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_technically_validated
+:COSMIC_technically_validated rdf:type owl:ObjectProperty ;
+                              rdfs:subPropertyOf :COSMIC_obj_properties_with_evidence_strength .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_uses_sample
+:COSMIC_uses_sample rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :COSMIC_properties ;
+                    rdfs:domain :MutationalSignature ;
+                    rdfs:range :Sample .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#causes
+:causes rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf :is_associated_with ;
+        rdfs:domain :Etiology ;
+        rdfs:range :Tumor ;
+        owl:propertyDisjointWith :occurs_with ;
+        rdfs:comment "An etiology causes cancer"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#contributes_to
+:contributes_to rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf owl:topObjectProperty ;
+                rdfs:domain :Mutation ,
+                            :Sample .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_immediate_part
+:has_immediate_part rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :has_part .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_median_mutations_in
+:has_median_mutations_in rdf:type owl:ObjectProperty ;
+                         rdfs:subPropertyOf :has_mutations ;
+                         rdfs:range :MutationalSignature ;
+                         rdfs:label "has_median_mutations_in"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_mutations
+:has_mutations rdf:type owl:ObjectProperty ;
+               rdfs:domain :Species ,
+                           :Tumor .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_part
+:has_part rdf:type owl:ObjectProperty ;
+          owl:inverseOf :part_of ;
+          rdfs:domain :MutationalSignature ;
+          rdfs:range :MutationProbability ;
+          rdfs:comment """Implemented according to
+
+https://www.w3.org/2001/sw/BestPractices/OEP/SimplePartWhole/"""@en ;
+          rdfs:label "has_part"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_signature
+:has_signature rdf:type owl:ObjectProperty ;
+               rdfs:domain :Sample ,
+                           :Tumor ;
+               rdfs:range :MutationalSignature ;
+               rdfs:comment """e.g. 80% of BiliaryAdenoCa tumors have signature sbs1, 
+Sample x has signature sbs5"""@en ;
+               rdfs:label "has_signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_signature_proportion
+:has_signature_proportion rdf:type owl:ObjectProperty ;
+                          rdfs:subPropertyOf :has_signature ;
+                          rdfs:label "has_signature_proportion"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#has_species
+:has_species rdf:type owl:ObjectProperty ;
+             rdfs:domain :Sample ;
+             rdfs:range :Species ;
+             rdfs:label "has_species"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#is_associated_with
+:is_associated_with rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf owl:topObjectProperty ;
+                    rdf:type owl:SymmetricProperty ;
+                    rdfs:domain :MutationalSignature ;
+                    rdfs:range :Etiology ,
+                               :Tumor ;
+                    rdfs:comment "relation defined for aetiologies, cancers, and signatures"@en ;
+                    rdfs:label "is_associated_with"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#is_at
+:is_at rdf:type owl:ObjectProperty ;
+       rdfs:domain :Mutation ,
+                   :Tumor ;
+       rdfs:range :BodyPart ,
+                  :Location .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#occurs_with
+:occurs_with rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :is_associated_with ;
+             rdfs:domain :Etiology ;
+             rdfs:range :MutationalSignature .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#part_of
+:part_of rdf:type owl:ObjectProperty .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#part_of_immediate
+:part_of_immediate rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :part_of .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#treats
+:treats rdf:type owl:ObjectProperty ;
+        rdfs:domain :Treatment ;
+        rdfs:range :Tumor ;
+        rdfs:comment "a treatment treats a sickness"@en ;
+        rdfs:label "treats"@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.w3.org/2002/07/owl#topDataProperty
+owl:topDataProperty rdfs:domain :Sample ;
+                    rdfs:range xsd:string .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_NGS_technique
+:COSMIC_NGS_technique rdf:type owl:DatatypeProperty ;
+                      rdfs:subPropertyOf :COSMIC_properties_with_evidence_strength ;
+                      rdfs:range xsd:string ;
+                      rdfs:comment "e.g. WES & WGS"@en ;
+                      rdfs:label "COSMIC_NGS_technique"@en ;
+                      :COSMIC_has_evidence_strength [ rdf:type :COSMIC_evidence_strength
+                                                    ] .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_aetiology
+:COSMIC_aetiology rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf :COSMIC_properties_with_evidence_strength ;
+                  rdfs:range rdfs:Literal .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_boolean
+:COSMIC_boolean rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf :COSMIC_properties_with_evidence_strength ;
+                rdfs:range xsd:boolean .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_data_properties
+:COSMIC_data_properties rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf owl:topDataProperty .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_different_variant_callers
+:COSMIC_different_variant_callers rdf:type owl:DatatypeProperty ;
+                                  rdfs:subPropertyOf :COSMIC_boolean ;
+                                  rdfs:range xsd:boolean ;
+                                  rdfs:comment "Variant callers are the softwares to label certain parts of the genome. If more than one are used this is relevant since they may not have uniform results"@en ;
+                                  rdfs:label "COSMIC_different_variant_callers"@en ;
+                                  :COSMIC_has_evidence_strength [ rdf:type :COSMIC_evidence_strength
+                                                                ] .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_extended_contextual_enrichment
+:COSMIC_extended_contextual_enrichment rdf:type owl:DatatypeProperty ;
+                                       rdfs:subPropertyOf :COSMIC_properties_with_evidence_strength ;
+                                       rdfs:range xsd:string ;
+                                       rdfs:comment "For comments like 'Two forms: pyrimidine or purine at -2 bp'"@en ;
+                                       rdfs:label "COSMIC_extended_contextual_enrichment"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_multiple_sequencing_centres
+:COSMIC_multiple_sequencing_centres rdf:type owl:DatatypeProperty ;
+                                    rdfs:subPropertyOf :COSMIC_boolean ;
+                                    rdfs:range xsd:boolean ;
+                                    rdfs:label "COSMIC_multiple_sequencing_centers"@en ,
+                                               "COSMIC_multiple_sequencing_centres"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_properties_with_evidence_strength
+:COSMIC_properties_with_evidence_strength rdf:type owl:DatatypeProperty ;
+                                          rdfs:subPropertyOf :COSMIC_data_properties ;
+                                          rdfs:comment "superclass to avoid having to add evidence strength parameters everywhere"@en ;
+                                          rdfs:label "COSMIC_properties_with_evidence_strength"@en ;
+                                          :COSMIC_has_evidence_strength [ rdf:type :COSMIC_evidence_strength
+                                                                        ] .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_replicated
+:COSMIC_replicated rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf :COSMIC_boolean ;
+                   rdfs:range xsd:boolean ;
+                   rdfs:label "COSMIC_replicated"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_support
+:COSMIC_support rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf :COSMIC_boolean ;
+                rdfs:comment "e.g. Experimental confirmation"@en ;
+                rdfs:label "COSMIC_support"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_validated_in_orthogonal_techniques
+:COSMIC_validated_in_orthogonal_techniques rdf:type owl:DatatypeProperty ;
+                                           rdfs:subPropertyOf :COSMIC_boolean ;
+                                           rdfs:range xsd:boolean ;
+                                           rdfs:label "COSMIC_validated_in_orthogonal_techniques"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasAssociationValue
+:hasAssociationValue rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf :hasValue .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasEvidenceStrength
+:hasEvidenceStrength rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf :hasValue .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasFloatValue
+:hasFloatValue rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :hasValue ;
+               rdfs:range xsd:float .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasMedianMutationPerMb
+:hasMedianMutationPerMb rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf :hasValue .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasName
+:hasName rdf:type owl:DatatypeProperty .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasOrigin
+:hasOrigin rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Sample ;
+           rdfs:range xsd:string ;
+           rdfs:comment "Where does this sample come from? Is it a reference genome, an actual sample, etc?"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasProbabilityValue
+:hasProbabilityValue rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf :hasFloatValue ;
+                     rdfs:domain [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasProbabilityValue ;
+                                   owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                   owl:onDataRange xsd:float
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasProbabilityValue ;
+                                   owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onDataRange xsd:float
+                                 ] ;
+                     rdfs:label "hasProbabilityValue"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasProportion
+:hasProportion rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :hasFloatValue .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#hasValue
+:hasValue rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf owl:topDataProperty ;
+          rdfs:domain :Observation ;
+          rdfs:range xsd:decimal ;
+          rdfs:label "hasValue"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.w3.org/ns/prov#Entity
+<http://www.w3.org/ns/prov#Entity> rdf:type owl:Class .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-A.A
+:A.C-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-A.C
+:A.C-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-A.G
+:A.C-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-A.T
+:A.C-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-G.A
+:A.C-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-G.C
+:A.C-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-G.G
+:A.C-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-G.T
+:A.C-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-T.A
+:A.C-T.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-T.C
+:A.C-T.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-T.G
+:A.C-T.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.C-T.T
+:A.C-T.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-A.A
+:A.T-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-A.C
+:A.T-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-A.G
+:A.T-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-A.T
+:A.T-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-C.A
+:A.T-C.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-C.C
+:A.T-C.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-C.G
+:A.T-C.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-C.T
+:A.T-C.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-G.A
+:A.T-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-G.C
+:A.T-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-G.G
+:A.T-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#A.T-G.T
+:A.T-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#BodyPart
+:BodyPart rdf:type owl:Class ;
+          rdfs:comment "Like breast, kidney, head and neck, colon, etc. Maps to NCIT"@en ;
+          rdfs:label "BodyPart"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-A.A
+:C.C-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-A.C
+:C.C-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-A.G
+:C.C-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-A.T
+:C.C-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-G.A
+:C.C-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-G.C
+:C.C-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-G.G
+:C.C-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-G.T
+:C.C-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-T.A
+:C.C-T.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-T.C
+:C.C-T.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-T.G
+:C.C-T.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.C-T.T
+:C.C-T.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-A.A
+:C.T-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-A.C
+:C.T-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-A.G
+:C.T-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-A.T
+:C.T-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-C.A
+:C.T-C.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-C.C
+:C.T-C.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-C.G
+:C.T-C.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-C.T
+:C.T-C.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-G.A
+:C.T-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-G.C
+:C.T-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-G.G
+:C.T-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#C.T-G.T
+:C.T-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#CN
+:CN rdf:type owl:Class ;
+    rdfs:subClassOf :MutationalSignature ;
+    rdfs:comment "Copy number signatures" ;
+    rdfs:label "CN Signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#CN_probability
+:CN_probability rdf:type owl:Class ;
+                rdfs:subClassOf :MutationProbability ;
+                rdfs:label "CN_probability"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_entities
+:COSMIC_entities rdf:type owl:Class .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_evidence_strength
+:COSMIC_evidence_strength rdf:type owl:Class ;
+                          rdfs:subClassOf :COSMIC_entities .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#COSMIC_version
+:COSMIC_version rdf:type owl:Class ;
+                rdfs:subClassOf :COSMIC_entities ;
+                rdfs:comment "e.g. v3.4"@en ;
+                rdfs:label "COSMIC_version"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#CategroricalEvidenceStrength
+:CategroricalEvidenceStrength rdf:type owl:Class ;
+                              rdfs:subClassOf :EvidenceStrength .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#DBM
+:DBM rdf:type owl:Class ;
+     rdfs:subClassOf :Mutation .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#DBS
+:DBS rdf:type owl:Class ;
+     rdfs:subClassOf :MutationalSignature ;
+     owl:disjointWith :SV ;
+     rdfs:comment "This signature type covers doublet base pair subtitutions"@en ;
+     rdfs:label "DBS Signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#DBS_probability
+:DBS_probability rdf:type owl:Class ;
+                 rdfs:subClassOf :MutationProbability ;
+                 rdfs:label "DBS_probability"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Etiology
+:Etiology rdf:type owl:Class .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Evidence
+:Evidence rdf:type owl:Class ;
+          rdfs:comment "Supporting Literature and evidence strength"@en ;
+          rdfs:label "Evidence"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#EvidenceStrength
+:EvidenceStrength rdf:type owl:Class ;
+                  rdfs:subClassOf :Evidence .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-A.A
+:G.C-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-A.C
+:G.C-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-A.G
+:G.C-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-A.T
+:G.C-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-G.A
+:G.C-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-G.C
+:G.C-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-G.G
+:G.C-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-G.T
+:G.C-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-T.A
+:G.C-T.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-T.C
+:G.C-T.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-T.G
+:G.C-T.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.C-T.T
+:G.C-T.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-A.A
+:G.T-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-A.C
+:G.T-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-A.G
+:G.T-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-A.T
+:G.T-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-C.A
+:G.T-C.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-C.C
+:G.T-C.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-C.G
+:G.T-C.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-C.T
+:G.T-C.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-G.A
+:G.T-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-G.C
+:G.T-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-G.G
+:G.T-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#G.T-G.T
+:G.T-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Gene
+:Gene rdf:type owl:Class ;
+      rdfs:subClassOf :Range .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#ID
+:ID rdf:type owl:Class ;
+    rdfs:subClassOf :MutationalSignature ;
+    rdfs:comment "indel signature"@en ;
+    rdfs:label "ID Signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#IDM
+:IDM rdf:type owl:Class ;
+     rdfs:subClassOf :Mutation .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#ID_probability
+:ID_probability rdf:type owl:Class ;
+                rdfs:subClassOf :MutationProbability ;
+                rdfs:label "ID_probability"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Location
+:Location rdf:type owl:Class .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Mutation
+:Mutation rdf:type owl:Class .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#MutationCatalogue
+:MutationCatalogue rdf:type owl:Class ;
+                   rdfs:subClassOf :Observation .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#MutationProbability
+:MutationProbability rdf:type owl:Class ;
+                     rdfs:subClassOf :Observation ;
+                     rdfs:comment """e.g. A[C>A]A
+8.861572e-04"""@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#MutationalExposure
+:MutationalExposure rdf:type owl:Class ;
+                    rdfs:subClassOf :Observation .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#MutationalSignature
+:MutationalSignature rdf:type owl:Class ;
+                     rdfs:subClassOf :Observation ;
+                     rdfs:comment "Covers all types of mutational signatures"@en ;
+                     rdfs:label "Mutational Signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#NumericEvidenceStrength
+:NumericEvidenceStrength rdf:type owl:Class ;
+                         rdfs:subClassOf :EvidenceStrength .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Observation
+:Observation rdf:type owl:Class ;
+             rdfs:label "Observation"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#RNA_SBS
+:RNA_SBS rdf:type owl:Class ;
+         rdfs:subClassOf :MutationalSignature ;
+         rdfs:label "RNA SBS Signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#RNA_SBS_probability
+:RNA_SBS_probability rdf:type owl:Class ;
+                     rdfs:subClassOf :MutationProbability ;
+                     rdfs:label "RNA_SBS_probability"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Range
+:Range rdf:type owl:Class ;
+       rdfs:subClassOf :Location .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#ReferenceSample
+:ReferenceSample rdf:type owl:Class ;
+                 rdfs:subClassOf :Sample ;
+                 rdfs:comment "e.g. GRCh37,GRCh38,mm9, mm10, rn6"@en ;
+                 rdfs:label "ReferenceSample"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#SBM
+:SBM rdf:type owl:Class ;
+     rdfs:subClassOf :Mutation .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#SBS
+:SBS rdf:type owl:Class ;
+     rdfs:subClassOf :MutationalSignature ;
+     rdfs:comment "This signature type covers single base pair mutations"@en ;
+     rdfs:label "SBS Signature" .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#SBS_probability
+:SBS_probability rdf:type owl:Class ;
+                 rdfs:subClassOf :MutationProbability ;
+                 rdfs:comment "e.g. A[C>A]A"@en ;
+                 rdfs:label "SBS_probability"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#SV
+:SV rdf:type owl:Class ;
+    rdfs:subClassOf :MutationalSignature ;
+    rdfs:comment "Structural Variation signature"@en ;
+    rdfs:label "SV Signature"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#SV_probability
+:SV_probability rdf:type owl:Class ;
+                rdfs:subClassOf :MutationProbability ;
+                rdfs:label "SV_probability"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Sample
+:Sample rdf:type owl:Class ;
+        rdfs:label "Sample"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Species
+:Species rdf:type owl:Class ;
+         rdfs:comment "e.g. Human, Mouse etc."@en ;
+         rdfs:label "Species"@en .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-A.A
+:T.C-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-A.C
+:T.C-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-A.G
+:T.C-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-A.T
+:T.C-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-G.A
+:T.C-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-G.C
+:T.C-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-G.G
+:T.C-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-G.T
+:T.C-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-T.A
+:T.C-T.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-T.C
+:T.C-T.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-T.G
+:T.C-T.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.C-T.T
+:T.C-T.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-A.A
+:T.T-A.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-A.C
+:T.T-A.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-A.G
+:T.T-A.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-A.T
+:T.T-A.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-C.A
+:T.T-C.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-C.C
+:T.T-C.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-C.G
+:T.T-C.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-C.T
+:T.T-C.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-G.A
+:T.T-G.A rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-G.C
+:T.T-G.C rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-G.G
+:T.T-G.G rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#T.T-G.T
+:T.T-G.T rdf:type owl:Class ;
+         rdfs:subClassOf :SBS_probability .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Treatment
+:Treatment rdf:type owl:Class .
+
+
+###  https://iccb-cologne.org/groups/lehmann-lab/msg#Tumor
+:Tumor rdf:type owl:Class ;
+       rdfs:comment "tumor types"@en ;
+       rdfs:label "Tumor"@en .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://purl.obolibrary.org/obo/NCIT_C14225
+obo:NCIT_C14225 rdf:type owl:NamedIndividual ,
+                         :Species ;
+                rdfs:label "Human"@en .
+
+
+###  http://purl.obolibrary.org/obo/NCIT_C14266
+obo:NCIT_C14266 rdf:type owl:NamedIndividual ,
+                         :Species ;
+                rdfs:label "rattus norvegicus"@en .
+
+
+###  http://purl.obolibrary.org/obo/NCIT_C45247
+obo:NCIT_C45247 rdf:type owl:NamedIndividual ,
+                         :Species ;
+                rdfs:label "mus musculus"@en .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+:COSMIC_aetiology rdfs:comment "Implementing this as a string for now, until I have etiologies implemented"@en ;
+                  rdfs:label "COSMIC_aetiology"@en .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :A.C-A.A
+                :A.C-A.C
+                :A.C-A.G
+                :A.C-A.T
+                :A.C-G.A
+                :A.C-G.C
+                :A.C-G.G
+                :A.C-G.T
+                :A.C-T.A
+                :A.C-T.C
+                :A.C-T.G
+                :A.C-T.T
+                :A.T-A.A
+                :A.T-A.C
+                :A.T-A.G
+                :A.T-A.T
+                :A.T-C.A
+                :A.T-C.C
+                :A.T-C.G
+                :A.T-C.T
+                :A.T-G.A
+                :A.T-G.C
+                :A.T-G.G
+                :A.T-G.T
+                :C.C-A.A
+                :C.C-A.C
+                :C.C-A.G
+                :C.C-A.T
+                :C.C-G.A
+                :C.C-G.C
+                :C.C-G.G
+                :C.C-G.T
+                :C.C-T.A
+                :C.C-T.C
+                :C.C-T.G
+                :C.C-T.T
+                :C.T-A.A
+                :C.T-A.C
+                :C.T-A.G
+                :C.T-A.T
+                :C.T-C.A
+                :C.T-C.C
+                :C.T-C.G
+                :C.T-C.T
+                :C.T-G.A
+                :C.T-G.C
+                :C.T-G.G
+                :C.T-G.T
+                :G.C-A.A
+                :G.C-A.C
+                :G.C-A.G
+                :G.C-A.T
+                :G.C-G.A
+                :G.C-G.C
+                :G.C-G.G
+                :G.C-G.T
+                :G.C-T.A
+                :G.C-T.C
+                :G.C-T.G
+                :G.C-T.T
+                :G.T-A.A
+                :G.T-A.C
+                :G.T-A.G
+                :G.T-A.T
+                :G.T-C.A
+                :G.T-C.C
+                :G.T-C.G
+                :G.T-C.T
+                :G.T-G.A
+                :G.T-G.C
+                :G.T-G.G
+                :G.T-G.T
+                :T.C-A.A
+                :T.C-A.C
+                :T.C-A.G
+                :T.C-A.T
+                :T.C-G.A
+                :T.C-G.C
+                :T.C-G.G
+                :T.C-G.T
+                :T.C-T.A
+                :T.C-T.C
+                :T.C-T.G
+                :T.C-T.T
+                :T.T-A.A
+                :T.T-A.C
+                :T.T-A.G
+                :T.T-A.T
+                :T.T-C.A
+                :T.T-C.C
+                :T.T-C.G
+                :T.T-C.T
+                :T.T-G.A
+                :T.T-G.C
+                :T.T-G.G
+                :T.T-G.T
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi
